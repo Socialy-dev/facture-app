@@ -42,12 +42,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen gradient-primary flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-400/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/[0.03] rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-indigo-500/[0.07] rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-white/[0.02] rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-400/[0.04] rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -63,9 +64,9 @@ export default function Login() {
         </div>
 
         {/* Card */}
-        <div className="glass rounded-2xl p-8 shadow-2xl">
+        <div className="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-2xl p-8 shadow-2xl">
           {/* Mode toggle */}
-          <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+          <div className="flex bg-white/[0.06] rounded-xl p-1 mb-6">
             <button
               type="button"
               onClick={() => {
@@ -75,8 +76,8 @@ export default function Login() {
               }}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                 mode === "login"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-indigo-300 hover:text-white"
               }`}
             >
               Connexion
@@ -90,8 +91,8 @@ export default function Login() {
               }}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                 mode === "register"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-white/15 text-white shadow-sm"
+                  : "text-indigo-300 hover:text-white"
               }`}
             >
               Inscription
@@ -100,48 +101,48 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-indigo-200 mb-1.5">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.07] border border-white/[0.1] rounded-xl text-white placeholder:text-indigo-400/60 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 focus:border-transparent transition-all"
                   placeholder="votre@email.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-indigo-200 mb-1.5">
                 Mot de passe
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" />
                 <input
                   type="password"
                   required
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.07] border border-white/[0.1] rounded-xl text-white placeholder:text-indigo-400/60 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100">
+              <div className="bg-red-500/15 text-red-300 text-sm px-4 py-3 rounded-xl border border-red-500/20">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="bg-emerald-50 text-emerald-600 text-sm px-4 py-3 rounded-xl border border-emerald-100">
+              <div className="bg-emerald-500/15 text-emerald-300 text-sm px-4 py-3 rounded-xl border border-emerald-500/20">
                 {success}
               </div>
             )}
@@ -149,7 +150,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-primary-500/25"
+              className="w-full py-3 px-4 bg-white/15 hover:bg-white/20 disabled:bg-white/5 disabled:text-indigo-400 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-2 border border-white/[0.12] shadow-lg shadow-black/20"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

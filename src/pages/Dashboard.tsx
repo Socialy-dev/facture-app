@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchInvoices();
+    fetchInvoices().catch(() => {});
   }, [fetchInvoices]);
 
   const totalHt = invoices.reduce((sum, inv) => sum + inv.total_ht, 0);

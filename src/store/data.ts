@@ -88,13 +88,18 @@ export const useDataStore = create<DataState>((set, get) => ({
 
   fetchInvoices: async () => {
     set({ loading: true });
-    const { data, error } = await supabase
-      .from("invoices")
-      .select("*, client:clients(*)")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("invoices")
+        .select("*, client:clients(*)")
+        .order("created_at", { ascending: false });
 
-    if (error) throw error;
-    set({ invoices: data ?? [], loading: false });
+      if (error) throw error;
+      set({ invoices: data ?? [], loading: false });
+    } catch (error) {
+      set({ loading: false });
+      throw error;
+    }
   },
 
   createInvoice: async (formData) => {
