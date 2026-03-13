@@ -91,31 +91,32 @@ export default function NewInvoice() {
   // Charger la facture existante en mode édition
   useEffect(() => {
     if (editId) {
-      const invoice = fetchInvoiceWithItems(editId);
-      if (invoice) {
-        setForm({
-          client_id: invoice.client_id,
-          client_name: invoice.client?.name ?? "",
-          client_address: invoice.client?.address ?? "",
-          client_postal_code: invoice.client?.postal_code ?? "",
-          client_city: invoice.client?.city ?? "",
-          invoice_number: invoice.invoice_number,
-          invoice_date: invoice.invoice_date,
-          delivery_date: invoice.delivery_date ?? "",
-          payment_due_date: invoice.payment_due_date ?? "",
-          discount_conditions: invoice.discount_conditions ?? "",
-          items:
-            invoice.items && invoice.items.length > 0
-              ? invoice.items.map((item) => ({
-                  id: item.id,
-                  quantity: item.quantity,
-                  designation: item.designation,
-                  unit_price_ht: item.unit_price_ht,
-                }))
-              : [createEmptyItem()],
-        });
-      }
-      setLoaded(true);
+      fetchInvoiceWithItems(editId).then((invoice) => {
+        if (invoice) {
+          setForm({
+            client_id: invoice.client_id,
+            client_name: invoice.client?.name ?? "",
+            client_address: invoice.client?.address ?? "",
+            client_postal_code: invoice.client?.postal_code ?? "",
+            client_city: invoice.client?.city ?? "",
+            invoice_number: invoice.invoice_number,
+            invoice_date: invoice.invoice_date,
+            delivery_date: invoice.delivery_date ?? "",
+            payment_due_date: invoice.payment_due_date ?? "",
+            discount_conditions: invoice.discount_conditions ?? "",
+            items:
+              invoice.items && invoice.items.length > 0
+                ? invoice.items.map((item) => ({
+                    id: item.id,
+                    quantity: item.quantity,
+                    designation: item.designation,
+                    unit_price_ht: item.unit_price_ht,
+                  }))
+                : [createEmptyItem()],
+          });
+        }
+        setLoaded(true);
+      });
     }
   }, [editId, fetchInvoiceWithItems]);
 
@@ -146,9 +147,9 @@ export default function NewInvoice() {
     [clients]
   );
 
-  const handleCreateQuickClient = () => {
+  const handleCreateQuickClient = async () => {
     if (!newClientForm.name.trim()) return;
-    const client = createClient({
+    const client = await createClient({
       name: newClientForm.name,
       address: newClientForm.address,
       postal_code: newClientForm.postal_code,
@@ -229,9 +230,9 @@ export default function NewInvoice() {
     setSaving(true);
     try {
       if (isEditMode && editId) {
-        updateInvoice(editId, form);
+        await updateInvoice(editId, form);
       } else {
-        createInvoice(form);
+        await createInvoice(form);
         removeFromStorage(DRAFT_KEY);
       }
       await handleDownloadPDF();

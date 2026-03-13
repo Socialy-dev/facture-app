@@ -68,17 +68,17 @@ export default function Clients() {
     setShowModal(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim()) return;
 
     if (editingId) {
-      updateClient(editingId, {
+      await updateClient(editingId, {
         ...form,
         email: form.email || null,
         phone: form.phone || null,
       });
     } else {
-      createClient({
+      await createClient({
         ...form,
         email: form.email || null,
         phone: form.phone || null,

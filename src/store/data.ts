@@ -1,31 +1,27 @@
 import { create } from "zustand";
-import { loadFromStorage, saveToStorage } from "../lib/storage";
+import { supabase } from "../lib/supabase";
 import { useAuthStore } from "./auth";
-import type { Client, Invoice, InvoiceItem, InvoiceFormData } from "../types";
+import type { Client, Invoice, InvoiceFormData } from "../types";
 
 interface DataState {
   clients: Client[];
   invoices: Invoice[];
   loading: boolean;
-  fetchClients: () => void;
+  fetchClients: () => Promise<void>;
   createClient: (
     client: Omit<Client, "id" | "user_id" | "created_at">
-  ) => Client;
-  updateClient: (id: string, data: Partial<Client>) => void;
-  deleteClient: (id: string) => void;
-  fetchInvoices: () => void;
-  createInvoice: (data: InvoiceFormData) => Invoice;
-  fetchInvoiceWithItems: (id: string) => Invoice | null;
-  updateInvoice: (id: string, data: InvoiceFormData) => Invoice;
+  ) => Promise<Client>;
+  updateClient: (id: string, data: Partial<Client>) => Promise<void>;
+  deleteClient: (id: string) => Promise<void>;
+  fetchInvoices: () => Promise<void>;
+  createInvoice: (data: InvoiceFormData) => Promise<Invoice>;
+  updateInvoice: (id: string, data: InvoiceFormData) => Promise<Invoice>;
+  fetchInvoiceWithItems: (id: string) => Promise<Invoice | null>;
   updateInvoiceStatus: (
     id: string,
     status: "draft" | "sent" | "paid"
-  ) => void;
-  deleteInvoice: (id: string) => void;
-}
-
-function generateId(): string {
-  return crypto.randomUUID();
+  ) => Promise<void>;
+  deleteInvoice: (id: string) => Promise<void>;
 }
 
 export const useDataStore = create<DataState>((set, get) => ({
@@ -33,61 +29,105 @@ export const useDataStore = create<DataState>((set, get) => ({
   invoices: [],
   loading: false,
 
-  fetchClients: () => {
-    const clients = loadFromStorage<Client[]>("clients", []);
-    set({ clients });
+  fetchClients: async () => {
+    const { data, error } = await supabase
+      .from("clients")
+      .select("*")
+      .order("name");
+
+    if (error) throw error;
+    set({ clients: data ?? [] });
   },
 
-  createClient: (clientData) => {
-    const client: Client = {
-      ...clientData,
-      id: generateId(),
-      user_id: "local",
-      created_at: new Date().toISOString(),
-    };
-    const updated = [...get().clients, client];
-    saveToStorage("clients", updated);
-    set({ clients: updated });
-    return client;
+  createClient: async (clientData) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
+    const { data, error } = await supabase
+      .from("clients")
+      .insert({ ...clientData, user_id: user.id })
+      .select()
+      .single();
+
+    if (error) throw error;
+    set({ clients: [...get().clients, data] });
+    return data;
   },
 
-  updateClient: (id, updates) => {
-    const updated = get().clients.map((c) =>
-      c.id === id ? { ...c, ...updates } : c
-    );
-    saveToStorage("clients", updated);
-    set({ clients: updated });
+  updateClient: async (id, updates) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
+    const { error } = await supabase
+      .from("clients")
+      .update(updates)
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) throw error;
+    set({
+      clients: get().clients.map((c) =>
+        c.id === id ? { ...c, ...updates } : c
+      ),
+    });
   },
 
-  deleteClient: (id) => {
-    const updated = get().clients.filter((c) => c.id !== id);
-    saveToStorage("clients", updated);
-    set({ clients: updated });
+  deleteClient: async (id) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
+    const { error } = await supabase
+      .from("clients")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) throw error;
+    set({ clients: get().clients.filter((c) => c.id !== id) });
   },
 
-  fetchInvoices: () => {
-    const invoices = loadFromStorage<Invoice[]>("invoices", []);
-    const clients = loadFromStorage<Client[]>("clients", []);
-    const enriched = invoices.map((inv) => ({
-      ...inv,
-      client: clients.find((c) => c.id === inv.client_id),
-    }));
-    set({ invoices: enriched, loading: false });
+  fetchInvoices: async () => {
+    set({ loading: true });
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*, client:clients(*)")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    set({ invoices: data ?? [], loading: false });
   },
 
-  createInvoice: (formData) => {
+  createInvoice: async (formData) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
     const totalHt = formData.items.reduce(
       (sum, item) => sum + item.quantity * item.unit_price_ht,
       0
     );
 
-    const invoiceId = generateId();
+    const { data: invoice, error: invoiceError } = await supabase
+      .from("invoices")
+      .insert({
+        user_id: user.id,
+        client_id: formData.client_id,
+        invoice_number: formData.invoice_number,
+        invoice_date: formData.invoice_date,
+        delivery_date: formData.delivery_date || null,
+        payment_due_date: formData.payment_due_date || null,
+        discount_conditions: formData.discount_conditions || null,
+        total_ht: totalHt,
+        status: "draft",
+      })
+      .select()
+      .single();
 
-    const items: InvoiceItem[] = formData.items
+    if (invoiceError) throw invoiceError;
+
+    const items = formData.items
       .filter((item) => item.designation.trim() !== "")
       .map((item, index) => ({
-        id: generateId(),
-        invoice_id: invoiceId,
+        invoice_id: invoice.id,
         quantity: item.quantity,
         designation: item.designation,
         unit_price_ht: item.unit_price_ht,
@@ -95,59 +135,62 @@ export const useDataStore = create<DataState>((set, get) => ({
         sort_order: index,
       }));
 
-    const invoice: Invoice = {
-      id: invoiceId,
-      user_id: "local",
-      client_id: formData.client_id,
-      invoice_number: formData.invoice_number,
-      invoice_date: formData.invoice_date,
-      delivery_date: formData.delivery_date || null,
-      payment_due_date: formData.payment_due_date || null,
-      discount_conditions: formData.discount_conditions || null,
-      total_ht: totalHt,
-      status: "draft",
-      created_at: new Date().toISOString(),
-      items,
-    };
+    if (items.length > 0) {
+      const { error: itemsError } = await supabase
+        .from("invoice_items")
+        .insert(items);
 
-    const existing = loadFromStorage<Invoice[]>("invoices", []);
-    saveToStorage("invoices", [...existing, invoice]);
+      if (itemsError) throw itemsError;
+    }
 
     // Incrémenter le numéro de facture
     const { profile, updateProfile } = useAuthStore.getState();
-    updateProfile({
+    await updateProfile({
       next_invoice_number: profile.next_invoice_number + 1,
     });
 
-    get().fetchInvoices();
+    await get().fetchInvoices();
     return invoice;
   },
 
-  fetchInvoiceWithItems: (id) => {
-    const invoices = loadFromStorage<Invoice[]>("invoices", []);
-    const clients = loadFromStorage<Client[]>("clients", []);
-    const invoice = invoices.find((inv) => inv.id === id);
-    if (!invoice) return null;
-    return {
-      ...invoice,
-      client: clients.find((c) => c.id === invoice.client_id),
-    };
-  },
-
-  updateInvoice: (id, formData) => {
-    const all = loadFromStorage<Invoice[]>("invoices", []);
-    const existing = all.find((inv) => inv.id === id);
-    if (!existing) throw new Error("Facture introuvable");
+  updateInvoice: async (id, formData) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
 
     const totalHt = formData.items.reduce(
       (sum, item) => sum + item.quantity * item.unit_price_ht,
       0
     );
 
-    const items: InvoiceItem[] = formData.items
+    const { data: invoice, error: invoiceError } = await supabase
+      .from("invoices")
+      .update({
+        client_id: formData.client_id,
+        invoice_number: formData.invoice_number,
+        invoice_date: formData.invoice_date,
+        delivery_date: formData.delivery_date || null,
+        payment_due_date: formData.payment_due_date || null,
+        discount_conditions: formData.discount_conditions || null,
+        total_ht: totalHt,
+      })
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select()
+      .single();
+
+    if (invoiceError) throw invoiceError;
+
+    // Supprimer les anciens items et insérer les nouveaux
+    const { error: deleteError } = await supabase
+      .from("invoice_items")
+      .delete()
+      .eq("invoice_id", id);
+
+    if (deleteError) throw deleteError;
+
+    const items = formData.items
       .filter((item) => item.designation.trim() !== "")
       .map((item, index) => ({
-        id: generateId(),
         invoice_id: id,
         quantity: item.quantity,
         designation: item.designation,
@@ -156,30 +199,48 @@ export const useDataStore = create<DataState>((set, get) => ({
         sort_order: index,
       }));
 
-    const updated: Invoice = {
-      ...existing,
-      client_id: formData.client_id,
-      invoice_number: formData.invoice_number,
-      invoice_date: formData.invoice_date,
-      delivery_date: formData.delivery_date || null,
-      payment_due_date: formData.payment_due_date || null,
-      discount_conditions: formData.discount_conditions || null,
-      total_ht: totalHt,
-      items,
-    };
+    if (items.length > 0) {
+      const { error: itemsError } = await supabase
+        .from("invoice_items")
+        .insert(items);
 
-    const updatedAll = all.map((inv) => (inv.id === id ? updated : inv));
-    saveToStorage("invoices", updatedAll);
-    get().fetchInvoices();
-    return updated;
+      if (itemsError) throw itemsError;
+    }
+
+    await get().fetchInvoices();
+    return invoice;
   },
 
-  updateInvoiceStatus: (id, status) => {
-    const all = loadFromStorage<Invoice[]>("invoices", []);
-    const updated = all.map((inv) =>
-      inv.id === id ? { ...inv, status } : inv
-    );
-    saveToStorage("invoices", updated);
+  fetchInvoiceWithItems: async (id) => {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*, client:clients(*), items:invoice_items(*)")
+      .eq("id", id)
+      .single();
+
+    if (error) return null;
+
+    if (data.items) {
+      data.items.sort(
+        (a: { sort_order: number }, b: { sort_order: number }) =>
+          a.sort_order - b.sort_order
+      );
+    }
+
+    return data;
+  },
+
+  updateInvoiceStatus: async (id, status) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
+    const { error } = await supabase
+      .from("invoices")
+      .update({ status })
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) throw error;
     set({
       invoices: get().invoices.map((inv) =>
         inv.id === id ? { ...inv, status } : inv
@@ -187,10 +248,18 @@ export const useDataStore = create<DataState>((set, get) => ({
     });
   },
 
-  deleteInvoice: (id) => {
-    const all = loadFromStorage<Invoice[]>("invoices", []);
-    const updated = all.filter((inv) => inv.id !== id);
-    saveToStorage("invoices", updated);
+  deleteInvoice: async (id) => {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error("Non authentifié");
+
+    // Items supprimés automatiquement via ON DELETE CASCADE
+    const { error } = await supabase
+      .from("invoices")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) throw error;
     set({ invoices: get().invoices.filter((inv) => inv.id !== id) });
   },
 }));

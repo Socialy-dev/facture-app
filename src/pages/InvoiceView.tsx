@@ -26,8 +26,7 @@ export default function InvoiceView() {
 
   useEffect(() => {
     if (id) {
-      const data = fetchInvoiceWithItems(id);
-      setInvoice(data);
+      fetchInvoiceWithItems(id).then((data) => setInvoice(data));
     }
   }, [id, fetchInvoiceWithItems]);
 
