@@ -110,7 +110,7 @@ function ImageUploadField({
           <button
             type="button"
             onClick={onRemove}
-            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 max-sm:opacity-100 transition-opacity"
           >
             <X className="w-3 h-3" />
           </button>
@@ -201,17 +201,17 @@ export default function Settings() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Paramètres</h1>
+          <p className="text-gray-500 mt-1 text-sm sm:text-base">
             Configurez vos informations professionnelles
           </p>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className={`relative group flex items-center gap-2 px-6 py-3 font-medium rounded-xl transition-all duration-300 shadow-lg hover:-translate-y-0.5 ${
+          className={`relative group flex items-center justify-center gap-2 px-5 sm:px-6 py-3 font-medium rounded-xl transition-all duration-300 shadow-lg hover:-translate-y-0.5 ${
             saved
               ? "bg-emerald-500 text-white shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40"
               : "bg-primary-600 hover:bg-primary-700 text-white shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40"
@@ -234,9 +234,9 @@ export default function Settings() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Business info */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center">
               <Building2 className="w-4.5 h-4.5 text-primary-600" />
@@ -270,7 +270,7 @@ export default function Settings() {
               value={form.address}
               onChange={handleChange}
             />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <InputField
                 label="Code postal"
                 name="postal_code"
@@ -309,8 +309,8 @@ export default function Settings() {
         </div>
 
         {/* Legal info */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center">
                 <FileText className="w-4.5 h-4.5 text-violet-600" />
@@ -339,7 +339,7 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
                 <CreditCard className="w-4.5 h-4.5 text-emerald-600" />
@@ -358,7 +358,7 @@ export default function Settings() {
             />
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center">
                 <FileText className="w-4.5 h-4.5 text-orange-600" />
@@ -382,7 +382,7 @@ export default function Settings() {
         </div>
 
         {/* Legal mentions */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-lg bg-rose-50 flex items-center justify-center">
               <FileText className="w-4.5 h-4.5 text-rose-600" />
@@ -400,14 +400,14 @@ export default function Settings() {
         </div>
 
         {/* Logo & Signature */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center">
               <Image className="w-4.5 h-4.5 text-sky-600" />
             </div>
             <h2 className="font-semibold text-gray-900">Logo & Signature</h2>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <ImageUploadField
               label="Logo (optionnel)"
               value={form.logo_base64}

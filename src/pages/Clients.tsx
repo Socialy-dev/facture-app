@@ -94,14 +94,14 @@ export default function Clients() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
-          <p className="text-gray-500 mt-1">Gérez votre base de clients</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h1>
+          <p className="text-gray-500 mt-1 text-sm sm:text-base">Gérez votre base de clients</p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-5 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-primary-500/25"
+          className="flex items-center justify-center gap-2 px-5 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-primary-500/25"
         >
           <Plus className="w-5 h-5" />
           Nouveau client
@@ -122,7 +122,7 @@ export default function Clients() {
 
       {/* Client cards */}
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 sm:p-16 text-center">
           <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500">
             {search ? "Aucun client trouvé" : "Aucun client pour le moment"}
@@ -137,20 +137,20 @@ export default function Clients() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filtered.map((client) => (
             <div
               key={client.id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group"
+              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 hover:shadow-md transition-shadow group"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5 text-primary-600" />
                   </div>
-                  <h3 className="font-semibold text-gray-900">{client.name}</h3>
+                  <h3 className="font-semibold text-gray-900 truncate">{client.name}</h3>
                 </div>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
                   <button
                     onClick={() => openEdit(client.id)}
                     className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
@@ -166,22 +166,22 @@ export default function Clients() {
                 </div>
               </div>
               <div className="space-y-1.5 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                  <span className="break-words">
                     {client.address}, {client.postal_code} {client.city}
                   </span>
                 </div>
                 {client.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="w-3.5 h-3.5" />
+                    <Phone className="w-3.5 h-3.5 shrink-0" />
                     <span>{client.phone}</span>
                   </div>
                 )}
                 {client.email && (
                   <div className="flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{client.email}</span>
+                    <Mail className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{client.email}</span>
                   </div>
                 )}
               </div>
@@ -192,8 +192,8 @@ export default function Clients() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg p-5 sm:p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900">
                 {editingId ? "Modifier le client" : "Nouveau client"}

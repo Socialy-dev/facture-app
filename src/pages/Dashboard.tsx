@@ -64,16 +64,16 @@ export default function Dashboard() {
       <OnboardingBanner />
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Tableau de bord</h1>
+          <p className="text-gray-500 mt-1 text-sm sm:text-base">
             Vue d'ensemble de vos factures
           </p>
         </div>
         <Link
           to="/nouvelle-facture"
-          className="relative group flex items-center gap-2 px-6 py-3 bg-primary-600 text-white font-medium rounded-xl transition-all duration-300 hover:bg-primary-700 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5"
+          className="relative group flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-primary-600 text-white font-medium rounded-xl transition-all duration-300 hover:bg-primary-700 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5"
         >
           <span className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
           <FilePlus className="w-5 h-5 relative z-10" />
@@ -82,53 +82,53 @@ export default function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary-600" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
             </div>
-            <span className="text-sm text-gray-500">Total factures</span>
+            <span className="text-xs sm:text-sm text-gray-500">Total factures</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{invoices.length}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">{invoices.length}</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
-              <Euro className="w-5 h-5 text-indigo-600" />
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+              <Euro className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
             </div>
-            <span className="text-sm text-gray-500">Chiffre d'affaires HT</span>
+            <span className="text-xs sm:text-sm text-gray-500">CA HT</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
             {formatCurrency(totalHt)}
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-amber-600" />
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
             </div>
-            <span className="text-sm text-gray-500">En attente</span>
+            <span className="text-xs sm:text-sm text-gray-500">En attente</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{unpaid.length}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">{unpaid.length}</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
             </div>
-            <span className="text-sm text-gray-500">Payées</span>
+            <span className="text-xs sm:text-sm text-gray-500">Payées</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{paid.length}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900">{paid.length}</p>
         </div>
       </div>
 
-      {/* Invoices table */}
+      {/* Invoices */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-900">Factures récentes</h2>
         </div>
 
@@ -149,65 +149,115 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-sm text-gray-500 border-b border-gray-100">
-                <th className="px-6 py-3 font-medium">N°</th>
-                <th className="px-6 py-3 font-medium">Client</th>
-                <th className="px-6 py-3 font-medium">Date</th>
-                <th className="px-6 py-3 font-medium">Montant HT</th>
-                <th className="px-6 py-3 font-medium">Statut</th>
-                <th className="px-6 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((invoice) => (
-                <tr
-                  key={invoice.id}
-                  className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {invoice.invoice_number}
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">
-                    {invoice.client?.name ?? "—"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">
-                    {format(new Date(invoice.invoice_date), "dd MMM yyyy", {
-                      locale: fr,
-                    })}
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {formatCurrency(invoice.total_ht)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${statusConfig[invoice.status].color}`}
+          <>
+            {/* Desktop table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-gray-500 border-b border-gray-100">
+                    <th className="px-6 py-3 font-medium">N°</th>
+                    <th className="px-6 py-3 font-medium">Client</th>
+                    <th className="px-6 py-3 font-medium">Date</th>
+                    <th className="px-6 py-3 font-medium">Montant HT</th>
+                    <th className="px-6 py-3 font-medium">Statut</th>
+                    <th className="px-6 py-3 font-medium text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoices.map((invoice) => (
+                    <tr
+                      key={invoice.id}
+                      className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
                     >
-                      {statusConfig[invoice.status].label}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-1">
+                      <td className="px-6 py-4 font-medium text-gray-900">
+                        {invoice.invoice_number}
+                      </td>
+                      <td className="px-6 py-4 text-gray-700">
+                        {invoice.client?.name ?? "—"}
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        {format(new Date(invoice.invoice_date), "dd MMM yyyy", {
+                          locale: fr,
+                        })}
+                      </td>
+                      <td className="px-6 py-4 font-medium text-gray-900">
+                        {formatCurrency(invoice.total_ht)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${statusConfig[invoice.status].color}`}
+                        >
+                          {statusConfig[invoice.status].label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-1">
+                          <Link
+                            to={`/facture/${invoice.id}`}
+                            className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                            title="Voir"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                          <Link
+                            to={`/modifier-facture/${invoice.id}`}
+                            className="p-2 text-gray-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
+                            title="Modifier"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(invoice.id)}
+                            disabled={deleting === invoice.id}
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
+                            title="Supprimer"
+                          >
+                            {deleting === invoice.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile cards */}
+            <div className="md:hidden divide-y divide-gray-100">
+              {invoices.map((invoice) => (
+                <div key={invoice.id} className="p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-sm font-bold text-gray-900 shrink-0">
+                        N°{invoice.invoice_number}
+                      </span>
+                      <span
+                        className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[invoice.status].color}`}
+                      >
+                        {statusConfig[invoice.status].label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
                       <Link
                         to={`/facture/${invoice.id}`}
-                        className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
-                        title="Voir"
+                        className="p-2 text-gray-400 hover:text-primary-600 rounded-lg"
                       >
                         <Eye className="w-4 h-4" />
                       </Link>
                       <Link
                         to={`/modifier-facture/${invoice.id}`}
-                        className="p-2 text-gray-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
-                        title="Modifier"
+                        className="p-2 text-gray-400 hover:text-violet-600 rounded-lg"
                       >
                         <Pencil className="w-4 h-4" />
                       </Link>
                       <button
                         onClick={() => handleDelete(invoice.id)}
                         disabled={deleting === invoice.id}
-                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
-                        title="Supprimer"
+                        className="p-2 text-gray-400 hover:text-red-600 rounded-lg disabled:opacity-50"
                       >
                         {deleting === invoice.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -216,11 +266,24 @@ export default function Dashboard() {
                         )}
                       </button>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-700 truncate">
+                      {invoice.client?.name ?? "—"}
+                    </span>
+                    <span className="font-medium text-gray-900 shrink-0 ml-2">
+                      {formatCurrency(invoice.total_ht)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    {format(new Date(invoice.invoice_date), "dd MMM yyyy", {
+                      locale: fr,
+                    })}
+                  </p>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -88,71 +88,70 @@ export default function InvoiceView() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link
             to="/"
-            className="p-2.5 text-gray-400 hover:text-gray-600 hover:bg-white/80 rounded-xl transition-all border border-transparent hover:border-gray-200 hover:shadow-sm"
+            className="p-2 sm:p-2.5 text-gray-400 hover:text-gray-600 hover:bg-white/80 rounded-xl transition-all border border-transparent hover:border-gray-200 hover:shadow-sm"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
               Facture N°{invoice.invoice_number}
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 mt-0.5 sm:mt-1 text-sm truncate">
               {invoice.client?.name ?? "Client inconnu"}
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+
+        {/* Action buttons */}
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {invoice.status !== "sent" && (
             <button
               onClick={handleMarkSent}
-              className="relative group flex items-center gap-2 px-5 py-3 bg-amber-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-amber-600 shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5"
+              className="relative group flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-amber-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-amber-600 shadow-lg shadow-amber-500/30 text-sm"
             >
-              <span className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <Clock className="w-4 h-4 relative z-10" />
-              <span className="relative z-10 text-sm">Envoyée</span>
+              <Clock className="w-4 h-4" />
+              <span>Envoyée</span>
             </button>
           )}
           {invoice.status !== "paid" && (
             <button
               onClick={handleMarkPaid}
-              className="relative group flex items-center gap-2 px-5 py-3 bg-emerald-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-emerald-600 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-0.5"
+              className="relative group flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-emerald-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-emerald-600 shadow-lg shadow-emerald-500/30 text-sm"
             >
-              <span className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CheckCircle2 className="w-4 h-4 relative z-10" />
-              <span className="relative z-10 text-sm">Payée</span>
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Payée</span>
             </button>
           )}
           <button
             onClick={() => navigate(`/modifier-facture/${invoice.id}`)}
-            className="relative group flex items-center gap-2 px-5 py-3 bg-violet-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-violet-600 shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5"
+            className="relative group flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-violet-500 text-white font-medium rounded-xl transition-all duration-300 hover:bg-violet-600 shadow-lg shadow-violet-500/30 text-sm"
           >
-            <span className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Pencil className="w-4 h-4 relative z-10" />
-            <span className="relative z-10 text-sm">Modifier</span>
+            <Pencil className="w-4 h-4" />
+            <span>Modifier</span>
           </button>
           <button
             onClick={handleDownload}
             disabled={generating}
-            className="relative group flex items-center gap-2 px-5 py-3 bg-primary-600 text-white font-medium rounded-xl transition-all duration-300 hover:bg-primary-700 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
+            className="relative group flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-primary-600 text-white font-medium rounded-xl transition-all duration-300 hover:bg-primary-700 shadow-lg shadow-primary-500/30 disabled:opacity-60 text-sm"
           >
-            <span className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             {generating ? (
-              <Loader2 className="w-4 h-4 animate-spin relative z-10" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Download className="w-4 h-4 relative z-10" />
+              <Download className="w-4 h-4" />
             )}
-            <span className="relative z-10 text-sm">Télécharger PDF</span>
+            <span className="hidden sm:inline">Télécharger PDF</span>
+            <span className="sm:hidden">PDF</span>
           </button>
         </div>
       </div>
 
       {/* Preview */}
       <div className="max-w-3xl mx-auto">
-        <div className="bg-gray-50 rounded-2xl p-6">
+        <div className="bg-gray-50 rounded-2xl p-3 sm:p-6 overflow-x-auto">
           <InvoicePreview profile={profile} form={formData} />
         </div>
       </div>
