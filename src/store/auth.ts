@@ -79,7 +79,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+    } catch {
+      // Ignore network errors — clear local state regardless
+    }
     set({ user: null, profile: EMPTY_PROFILE });
   },
 
