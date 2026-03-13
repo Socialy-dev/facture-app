@@ -52,11 +52,11 @@ export default function OnboardingBanner() {
   if (allDone) return null;
 
   return (
-    <div className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-primary-600 via-violet-600 to-purple-600 p-[1px]">
-      <div className="relative rounded-[15px] bg-gradient-to-r from-primary-600/95 via-violet-600/95 to-purple-600/95 p-6 overflow-hidden">
+    <div className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-[1px] border border-white/[0.08]">
+      <div className="relative rounded-[15px] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 overflow-hidden">
         {/* Background glow effects */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/[0.07] rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
         <div className="relative z-10 flex items-center gap-6">
           {/* Left: Icon + Message */}
